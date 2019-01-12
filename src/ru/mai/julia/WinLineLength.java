@@ -1,33 +1,21 @@
 package ru.mai.julia;
 
-public enum FieldSize {
-    FIELD_3X3(3, 3), FIELD_9X9(9, 9), FIELD_15X15(15, 15);
 
-    private int width, height;
+// длина линии, которую надо собрать, чтобы выиграть
+public enum WinLineLength {
+    LENGTH_3, LENGTH_4, LENGTH_5;
 
-    FieldSize(int width, int height){
-        this.width = width;
-        this.height = height;
-    }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public static FieldSize parse(String option) {
+    public static WinLineLength parse(String option) {
         try {
             int intCount = Integer.parseInt(option.trim());
             switch (intCount) {
                 case 1:
-                    return FIELD_3X3;
+                    return LENGTH_3;
                 case 2:
-                    return FIELD_9X9;
+                    return LENGTH_4;
                 case 3:
-                    return FIELD_15X15;
+                    return LENGTH_5;
                 default:
                     System.out.println("Выбирайте из предложенных вариантов!!");
             }

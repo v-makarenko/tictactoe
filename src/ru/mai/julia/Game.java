@@ -1,14 +1,19 @@
 package ru.mai.julia;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Game {
-    private Field field = new Field(3, 3);
+    private GameRules gameRules;
+    private Field field;
+    private List<User> players = new ArrayList<>();
 
 
     public void start() {
-        ///
-
+        // TODO исправить
+//        gameRules = new GameRules();
+        field = new Field(gameRules.getFieldSize());
         gameLoop();
     }
 
