@@ -1,5 +1,7 @@
 package ru.mai.julia;
 
+import ru.mai.julia.enums.CellState;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

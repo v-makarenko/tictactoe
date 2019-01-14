@@ -1,4 +1,4 @@
-package ru.mai.julia;
+package ru.mai.julia.enums;
 
 public enum OpponentCount {
     COUNT_1, COUNT_2;

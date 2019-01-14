@@ -1,6 +1,9 @@
 package ru.mai.julia;
 
 
+import ru.mai.julia.enums.CellState;
+import ru.mai.julia.enums.FieldSize;
+
 public class Field {
     private CellState[][] cells;
 
@@ -16,6 +19,7 @@ public class Field {
                 cells[x][y] = CellState.EMPTY;
             }
         }
+
     }
 
 

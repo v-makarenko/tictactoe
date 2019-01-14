@@ -1,6 +1,10 @@
 package ru.mai.julia;
 
 
+import ru.mai.julia.enums.FieldSize;
+import ru.mai.julia.enums.OpponentCount;
+import ru.mai.julia.enums.WinLineLength;
+
 // Правила игры (Желаемые для пользователя и уже неизменяемые для сервера)
 public class GameRules {
     private FieldSize fieldSize;

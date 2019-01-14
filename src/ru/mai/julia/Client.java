@@ -1,9 +1,19 @@
 package ru.mai.julia;
 
+import ru.mai.julia.enums.ClientGameState;
+import ru.mai.julia.socket.client.ClientSender;
+
+import java.io.*;
+import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
+    public static String HOST = "localhost";
+    public static int PORT = 5000;
+
     private final Scanner scanner = new Scanner(System.in);
+    private ClientGameState gameState = ClientGameState.GANE_RULES_SETUP;
+    private ClientSender clientSender;
 
     public void printMenu() {
         System.out.println("1 - Начать игру");
@@ -13,50 +23,28 @@ public class Client {
     }
 
     public void getInfo() {
-        User user;
-        System.out.print("Введите имя: ");
-        user = new User(scanner.nextLine().trim());
 
 
-        OpponentCount prefferedOpponentCount = null;
-        while (prefferedOpponentCount == null) {
-            System.out.print("Введите количество соперников (1,2): ");
-            prefferedOpponentCount = OpponentCount.parse(scanner.nextLine());
-        }
-
-        FieldSize fieldSize = null;
-        WinLineLength winLineLength = null;
-        while (fieldSize == null) {
-            System.out.println("Введите размер поля: 1 - 3x3, 2 - 9x9, 3 - 15x15");
-            String input = scanner.nextLine();
-            fieldSize = FieldSize.parse(input);
-            winLineLength = WinLineLength.parse(input);
-        }
-
-//        OpponentCount prefferedOpponentCount = null;
-//        while (prefferedOpponentCount == null) {
-//            System.out.print("Введите количество символов в ряд для победы (3, 4, 5):  ");
-//            prefferedOpponentCount = OpponentCount.parse(scanner.nextLine());
-//        }
-
-        GameRules gameRules = new GameRules(prefferedOpponentCount, fieldSize, winLineLength);
+//        GameRules gameRules = new GameRules(prefferedOpponentCount, fieldSize, winLineLength);
 
     }
 
-    public void getUserRating(){}
+    public void getUserRating() {
+    }
 
-    public void getUsersPending(){}
+    public void getUsersPending() {
+    }
 
-    public void gameLoop(){
+    public void gameLoop() {
         int userInput = 0;
-        while (userInput != 4){
+        while (userInput != 4) {
             try {
                 userInput = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Введите корректную команду");
                 continue;
             }
-            switch (userInput){
+            switch (userInput) {
                 case 1:
                     getInfo();
                     break;
@@ -73,4 +61,14 @@ public class Client {
         }
     }
 
+    public ClientGameState getGameState() {
+        return gameState;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Socket socket = new Socket(HOST, PORT);
+        DataOutputStream outputStream =  new DataOutputStream(socket.getOutputStream());
+        outputStream.writeUTF("Hello");
+
+    }
 }

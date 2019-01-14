@@ -1,6 +1,8 @@
 package ru.mai.julia;
 
 
+import ru.mai.julia.enums.CellState;
+
 // Объект пользователя (игрока)
 public class User {
     private String username;
