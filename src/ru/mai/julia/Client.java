@@ -55,13 +55,6 @@ public class Client {
             winLineLength = WinLineLength.parse(input);
         }
 
-
-//        OpponentCount prefferedOpponentCount = null;
-//        while (prefferedOpponentCount == null) {
-//            System.out.print("Введите количество символов в ряд для победы (3, 4, 5):  ");
-//            prefferedOpponentCount = OpponentCount.parse(scanner.nextLine());
-//        }
-
         GameRules gameRules = new GameRules(prefferedOpponentCount, fieldSize, winLineLength);
         currentUser.setPreferredGameRules(gameRules);
 
@@ -133,6 +126,12 @@ public class Client {
             if (gameStatus.getWinner() != null) {
                 System.out.println("Игра окончена");
                 System.out.println("Победитель: " + gameStatus.getWinner().getUsername());
+                if(gameStatus.getWinner().equals(currentUser)){
+                    System.out.println("Вы победили!");
+                }
+                return;
+            } else if(gameStatus.getDroppedUser()!=null){
+                System.out.println(gameStatus.getDroppedUser().getUsername() + " вышел из игры и проиграл. Вы возвращены в режим ожидания.");
                 return;
             } else {
                 if (gameStatus.isYourTurn()) {
@@ -146,7 +145,7 @@ public class Client {
                         if (turn.split(" ").length == 2) {
                             x = Integer.parseInt(turn.split(" ")[0]);
                             y = Integer.parseInt(turn.split(" ")[1]);
-                            if (gameStatus.getField().getCellState(x, y) == CellState.EMPTY) {
+                            if (gameStatus.getField().getCellState(x-1, y-1) == CellState.EMPTY) {
                                 break;
                             } else {
                                 System.out.println("Клетка уже занята!");

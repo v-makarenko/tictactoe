@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class GameStatus implements Serializable {
     private Field field;
     private boolean yourTurn;
+    private User droppedUser;
     private User winner;
     private CellState cellState;
     private CellState[] cellStates;
@@ -67,5 +68,13 @@ public class GameStatus implements Serializable {
 
     public void setCellStatess(CellState[][] cellStatess) {
         this.cellStatess = cellStatess;
+    }
+
+    public User getDroppedUser() {
+        return droppedUser;
+    }
+
+    public void setDroppedUser(User droppedUser) {
+        this.droppedUser = droppedUser;
     }
 }

@@ -6,6 +6,7 @@ import ru.mai.julia.socket.Coordinates;
 import ru.mai.julia.socket.GameStatus;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.*;
 
 public class Game extends Thread {
@@ -13,6 +14,7 @@ public class Game extends Thread {
     private Field field;
     private List<User> players;
     private int currentUserPlaying;
+    private User waitingForUser;
 
     public Game(List<User> opponentList) {
         players = opponentList;
@@ -32,57 +34,86 @@ public class Game extends Thread {
     public void run() {
         try {
             loop();
+        } catch (SocketException e) {
+            System.out.println("User disconnected");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public void loop() throws IOException, ClassNotFoundException {
-        while (true) {
-            User waitingForUser = null;
-
-            for (int i = 0; i < players.size(); i++) {
-                GameStatus gameStatus = new GameStatus(field,
-                        i == currentUserPlaying,
-                        getUserByCellState(field.checkVictory(gameRules.getWinLineLength())));
-                gameStatus.setCellState(CellState.X);
-                gameStatus.setCellStates(new CellState[]{CellState.X, CellState.X, CellState.O});
-                gameStatus.setCellStatess(new CellState[][]{new CellState[]{CellState.X, CellState.X, CellState.O}});
-                if (i == currentUserPlaying) {
-                    waitingForUser = players.get(i);
-                }
-                players.get(i).getOutputStream().reset();
-                players.get(i).getOutputStream().writeObject(gameStatus);
-            }
-            if (field.checkVictory(gameRules.getWinLineLength()) != null) {
-                System.out.println("Победили " + field.checkVictory(gameRules.getWinLineLength()));
-                final User winner = getUserByCellState(field.checkVictory(gameRules.getWinLineLength()));
-                for (User player : players) {
-                    if (ObjectLocator.getServer().getUsersEverPlayedList().contains(player)) {
-                        User userFromList = ObjectLocator.getServer().getUsersEverPlayedList().get(ObjectLocator.getServer().getUsersEverPlayedList().indexOf(player));
-                        if (winner.equals(userFromList)) {
-                            userFromList.win();
-                        } else {
-                            userFromList.lose();
-                        }
-                    } else {
-                        if (winner.equals(player)) {
-                            player.win();
-                        } else {
-                            player.lose();
-                        }
-                        ObjectLocator.getServer().getUsersEverPlayedList().add(player);
+        try {
+            while (true) {
+                waitingForUser = null;
+                for (int i = 0; i < players.size(); i++) {
+                    GameStatus gameStatus = new GameStatus(field,
+                            i == currentUserPlaying,
+                            getUserByCellState(field.checkVictory(gameRules.getWinLineLength())));
+                    gameStatus.setCellState(CellState.X);
+                    gameStatus.setCellStates(new CellState[]{CellState.X, CellState.X, CellState.O});
+                    gameStatus.setCellStatess(new CellState[][]{new CellState[]{CellState.X, CellState.X, CellState.O}});
+                    if (i == currentUserPlaying) {
+                        waitingForUser = players.get(i);
                     }
+                    players.get(i).getOutputStream().reset();
+                    players.get(i).getOutputStream().writeObject(gameStatus);
+                }
+                if (field.checkVictory(gameRules.getWinLineLength()) != null) {
+                    System.out.println("Победили " + field.checkVictory(gameRules.getWinLineLength()));
+                    final User winner = getUserByCellState(field.checkVictory(gameRules.getWinLineLength()));
+                    endGame(winner);
+                    return;
                 }
 
-                return;
+                Coordinates coordinates = (Coordinates) waitingForUser.getInputStream().readObject();
+                field.setCellState(coordinates.getX(), coordinates.getY(), waitingForUser.getUserSymbol());
+                currentUserPlaying++;
+                currentUserPlaying = currentUserPlaying % players.size();
+
+            }
+        } catch (IOException exception) {
+            for (User player : players) {
+                if(!player.equals(waitingForUser)){
+                    GameStatus gameStatus = new GameStatus(field,
+                            false,
+                            null);
+                    gameStatus.setDroppedUser(waitingForUser);
+                    player.getOutputStream().reset();
+                    player.getOutputStream().writeObject(gameStatus);
+                }
             }
 
-            Coordinates coordinates = (Coordinates) waitingForUser.getInputStream().readObject();
-            field.setCellState(coordinates.getX(), coordinates.getY(), waitingForUser.getUserSymbol());
-            currentUserPlaying++;
-            currentUserPlaying = currentUserPlaying % players.size();
+
+            if (ObjectLocator.getServer().getUsersEverPlayedList().contains(waitingForUser)) {
+                ObjectLocator.getServer().getUsersEverPlayedList().get(ObjectLocator.getServer().getUsersEverPlayedList().indexOf(waitingForUser)).lose();
+            } else {
+                waitingForUser.lose();
+                ObjectLocator.getServer().getUsersEverPlayedList().add(waitingForUser);
+            }
+            ObjectLocator.getServer().endGame(this);
         }
+    }
+
+    private void endGame(User winner) {
+        for (User player : players) {
+            if (ObjectLocator.getServer().getUsersEverPlayedList().contains(player)) {
+                User userFromList = ObjectLocator.getServer().getUsersEverPlayedList().get(ObjectLocator.getServer().getUsersEverPlayedList().indexOf(player));
+                if (winner.equals(userFromList)) {
+                    userFromList.win();
+                } else {
+                    userFromList.lose();
+                }
+            } else {
+                if (winner.equals(player)) {
+                    player.win();
+                } else {
+                    player.lose();
+                }
+                ObjectLocator.getServer().getUsersEverPlayedList().add(player);
+            }
+        }
+        ObjectLocator.getServer().endGame(this);
+
     }
 
     private User getUserByCellState(CellState checkVictory) {

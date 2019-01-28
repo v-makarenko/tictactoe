@@ -6,7 +6,6 @@ import ru.mai.julia.User;
 import ru.mai.julia.enums.ClientGameState;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GameHandler {
@@ -24,6 +23,7 @@ public class GameHandler {
                 Game gameForCurrentUser = ObjectLocator.getServer().getGameForUser(clientHandler.getUser());
                 if (gameForCurrentUser != null) {
                     gameForCurrentUser.join();
+                    clientHandler.setClientGameState(ClientGameState.LOBBY);
                     return;
                 }
 
@@ -40,7 +40,6 @@ public class GameHandler {
                 if (isOpponentListFilled(opponentList)) {
                     opponentList.add(clientHandler.getUser());
                     game = ObjectLocator.getServer().createGame(opponentList);
-
                 }
             }
             if (game != null) {

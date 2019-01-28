@@ -13,7 +13,6 @@ public class ClientHandler extends Thread {
     private static int threadNo;
     LobbyHandler lobbyHandler;
     GameHandler gameHandler;
-    GameRulesHandler gameRulesHandler;
 
     private ClientGameState clientGameState = ClientGameState.LOBBY;
     Socket socket;
@@ -28,9 +27,6 @@ public class ClientHandler extends Thread {
     private void handleGame() throws IOException, ClassNotFoundException, InterruptedException {
         while (true) {
             switch (clientGameState) {
-                case GANE_RULES_SETUP:
-                    gameRulesHandler.loop();
-                    break;
                 case GAME:
                     ObjectLocator.getServer().addPendingUser(user);
                     gameHandler = new GameHandler(this);
@@ -53,9 +49,10 @@ public class ClientHandler extends Thread {
              ObjectInputStream inputStream = new ObjectInputStream(
                      socketInputStream);) {
             lobbyHandler = new LobbyHandler(inputStream, outputStream, this);
-            gameRulesHandler = new GameRulesHandler(inputStream, outputStream);
             gameHandler = new GameHandler(this);
             handleGame();
+        } catch (EOFException e) {
+            System.out.println("Клиент " + user != null ? user.getUsername() : "" + " отключился");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             System.exit(1);

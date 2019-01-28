@@ -1,12 +1,10 @@
 package ru.mai.julia.socket.server;
 
-import ru.mai.julia.Client;
 import ru.mai.julia.ObjectLocator;
 import ru.mai.julia.User;
 import ru.mai.julia.enums.ClientGameState;
 
 import java.io.*;
-import java.util.List;
 
 public class LobbyHandler {
     private final ClientHandler clientHandler;
@@ -18,16 +16,6 @@ public class LobbyHandler {
         this.inputStream = objectInputStream;
         this.outputStream = objectOutputStream;
         this.clientHandler = clientHandler;
-    }
-
-    public void print() {
-
-    }
-
-    public void printMenu() {
-        System.out.println("1 - Начать игру");
-        System.out.println("2 - Запросить пользовательский рейтинг");
-        System.out.println("3 - Запросить ожидающих пользователей");
     }
 
     public void loop() throws IOException, ClassNotFoundException {

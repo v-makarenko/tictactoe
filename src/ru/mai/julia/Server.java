@@ -18,14 +18,11 @@ public class Server {
     }
 
     public List<User> getUsersEverPlayedList() {
-        Collections.sort(usersEverPlayed, Collections.reverseOrder(new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                if (o1.equals(o2)) {
-                    return 0;
-                }
-                return o1.getWinCount() - o2.getWinCount();
+        usersEverPlayed.sort(Collections.reverseOrder((o1, o2) -> {
+            if (o1.equals(o2)) {
+                return 0;
             }
+            return o1.getWinCount() - o2.getWinCount();
         }));
         return usersEverPlayed;
     }
@@ -58,5 +55,9 @@ public class Server {
             }
         }
         return null;
+    }
+
+    public void endGame(Game game) {
+        games.remove(game);
     }
 }
