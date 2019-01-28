@@ -1,6 +1,8 @@
 package ru.mai.julia.enums;
 
-public enum FieldSize {
+import java.io.Serializable;
+
+public enum FieldSize implements Serializable {
     FIELD_3X3(3, 3), FIELD_9X9(9, 9), FIELD_15X15(15, 15);
 
     private int width, height;

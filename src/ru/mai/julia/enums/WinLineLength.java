@@ -1,10 +1,21 @@
 package ru.mai.julia.enums;
 
 
-// длина линии, которую надо собрать, чтобы выиграть
-public enum WinLineLength {
-    LENGTH_3, LENGTH_4, LENGTH_5;
+import java.io.Serializable;
 
+// длина линии, которую надо собрать, чтобы выиграть
+public enum WinLineLength implements Serializable {
+    LENGTH_3(3), LENGTH_4(4), LENGTH_5(5);
+
+    WinLineLength(int length) {
+        this.length = length;
+    }
+
+    private int length;
+
+    public int getLength() {
+        return length;
+    }
 
     public static WinLineLength parse(String option) {
         try {

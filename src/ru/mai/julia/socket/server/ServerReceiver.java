@@ -12,11 +12,11 @@ public class ServerReceiver {
     public static final String CHARSET = "UTF8";
     public void init(){
         try(ServerSocket serverSocket = new ServerSocket(PORT)){
-            Socket clientSocket = serverSocket.accept();
-            Client client = new Client();
-            ClientHandler clientHandler = new ClientHandler(clientSocket, client);
-            clientHandler.start();
-
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clientHandler.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

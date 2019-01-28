@@ -1,7 +1,15 @@
 package ru.mai.julia.enums;
 
-public enum OpponentCount {
-    COUNT_1, COUNT_2;
+import java.io.Serializable;
+
+public enum OpponentCount implements Serializable {
+    COUNT_1(1), COUNT_2(2);
+
+    int count;
+
+    OpponentCount(int count) {
+        this.count = count;
+    }
 
     public static OpponentCount parse(String count) {
         try {
@@ -18,5 +26,9 @@ public enum OpponentCount {
             System.out.println("Вы ввели некорректное число. Попытайтесь снова!");
         }
         return null;
+    }
+
+    public int getCount() {
+        return count;
     }
 }

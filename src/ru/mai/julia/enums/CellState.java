@@ -1,7 +1,9 @@
 package ru.mai.julia.enums;
 
-public enum CellState {
-    X("X"), O("O"), EMPTY(" ");
+import java.io.Serializable;
+
+public enum CellState implements Serializable {
+    X("X"), O("O"), Z("Z"), EMPTY(" ");
 
     private String displayName;
 

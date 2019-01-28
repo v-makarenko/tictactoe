@@ -2,20 +2,21 @@ package ru.mai.julia.socket.server;
 
 import ru.mai.julia.Client;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class GameRulesHandler {
-    DataInputStream inputStream;
+    ObjectInputStream inputStream;
+    ObjectOutputStream outputStream;
     Client client;
-    public GameRulesHandler(DataInputStream dataInputStream, Client client) {
+
+    public GameRulesHandler(ObjectInputStream objectInputStream, ObjectOutputStream objectOutputStream) {
         this.client = client;
-        this.inputStream = dataInputStream;
+        this.inputStream = objectInputStream;
+        this.inputStream = objectInputStream;
     }
 
-    public void loop(){
-        while(true) {
+    public void loop() {
+        while (true) {
             try {
                 String menuChoise = inputStream.readUTF();
                 System.out.println(menuChoise);
