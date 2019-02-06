@@ -1,5 +1,9 @@
 package ru.mai.julia.enums;
 
+// Состояние клиента
 public enum ClientGameState {
-    GANE_RULES_SETUP, LOBBY, GAME
+    // Ожидание
+    LOBBY,
+    // Игра
+    GAME
 }

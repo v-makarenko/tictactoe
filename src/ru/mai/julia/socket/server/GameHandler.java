@@ -19,7 +19,7 @@ public class GameHandler {
         while (true) {
             List<User> opponentList = new ArrayList<>();
             Game game = null;
-            synchronized (this) {
+            synchronized (this) { // в данный кусок кода может попасть только один поток
                 Game gameForCurrentUser = ObjectLocator.getServer().getGameForUser(clientHandler.getUser());
                 if (gameForCurrentUser != null) {
                     gameForCurrentUser.join();

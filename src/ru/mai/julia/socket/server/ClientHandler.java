@@ -9,8 +9,6 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
-    private static int threadMaxNo = 1;
-    private static int threadNo;
     LobbyHandler lobbyHandler;
     GameHandler gameHandler;
 
@@ -20,8 +18,6 @@ public class ClientHandler extends Thread {
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
-        threadNo = threadMaxNo;
-        threadMaxNo++;
     }
 
     private void handleGame() throws IOException, ClassNotFoundException, InterruptedException {

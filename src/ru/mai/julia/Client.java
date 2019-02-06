@@ -14,10 +14,11 @@ public class Client {
     public static int PORT = 5000;
 
     private final Scanner scanner = new Scanner(System.in);
-    private ClientGameState gameState = ClientGameState.GANE_RULES_SETUP;
 
     private Socket socket;
+    // Отправка сообщений на сервер
     private ObjectOutputStream outputStream;
+    // Получение сообщений с сервера
     private ObjectInputStream inputStream;
 
     private User currentUser;
@@ -35,7 +36,7 @@ public class Client {
         System.out.println("4 - Изменить желаемые правила игры");
         System.out.println("5 - Выйти");
     }
-
+    // Запросить и обновить правила игры для текущего игрока
     public void getInfo() throws IOException {
         System.out.print("Введите имя: ");
         currentUser = new User(scanner.nextLine().trim());
@@ -116,11 +117,10 @@ public class Client {
 
     private void startGame() throws IOException, ClassNotFoundException {
         outputStream.writeUTF("startGame");
-        outputStream.flush();
+        outputStream.flush(); // Отправить предыдущее сообщение немедленно, отключив оптимизацию, т.к. нам нельзя ждать неопределенное время
         while (true) {
             GameStatus gameStatus = (GameStatus) inputStream.readObject();
-            System.out.println(gameStatus);
-
+//            System.out.println(gameStatus);
             printField(gameStatus.getField());
 
             if (gameStatus.getWinner() != null) {

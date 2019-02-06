@@ -30,6 +30,7 @@ public class Field implements Serializable {
     }
 
     public void setCellState(int x, int y, CellState cellState) {
+        // чтобы клетка (1,1) проецировалась на элемент массива (0,0)
         x--;
         y--;
         if (x < width && y < height && getCellState(x, y) == CellState.EMPTY) {
@@ -163,11 +164,11 @@ public class Field implements Serializable {
 
         for (int i = 0; i <= height - targetSimilarCells; i++) {
             int k = 0;
-            while ((k + i) < height && (i-k)>=0) {
-                if (getCellState(i-k, i + k) == cellState) {
+            while ((i+k) < height) {
+                if (getCellState(height-1-k, i + k) == cellState) {
                     similarCells++;
                 } else {
-                    cellState = getCellState(i-k, i + k);
+                    cellState = getCellState(height-1-k, i + k);
                     similarCells = 1;
                 }
                 if (cellState != CellState.EMPTY
@@ -181,14 +182,4 @@ public class Field implements Serializable {
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        Field field = new Field(FieldSize.FIELD_9X9);
-        field.setCellState(5, 6, CellState.X);
-        field.setCellState(6, 5, CellState.X);
-        field.setCellState(7, 4, CellState.X);
-        System.out.println(field.checkVictory(WinLineLength.LENGTH_3));
-
-    }
-
 }

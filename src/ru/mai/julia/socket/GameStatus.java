@@ -2,7 +2,6 @@ package ru.mai.julia.socket;
 
 import ru.mai.julia.Field;
 import ru.mai.julia.User;
-import ru.mai.julia.enums.CellState;
 
 import java.io.Serializable;
 
@@ -11,17 +10,6 @@ public class GameStatus implements Serializable {
     private boolean yourTurn;
     private User droppedUser;
     private User winner;
-    private CellState cellState;
-    private CellState[] cellStates;
-    private CellState[][] cellStatess;
-
-    public CellState getCellState() {
-        return cellState;
-    }
-
-    public void setCellState(CellState cellState) {
-        this.cellState = cellState;
-    }
 
     public GameStatus(Field field, boolean yourTurn, User winner) {
         this.field = field;
@@ -52,22 +40,6 @@ public class GameStatus implements Serializable {
                 ", yourTurn=" + yourTurn +
                 ", winner=" + winner +
                 '}';
-    }
-
-    public CellState[] getCellStates() {
-        return cellStates;
-    }
-
-    public void setCellStates(CellState[] cellStates) {
-        this.cellStates = cellStates;
-    }
-
-    public CellState[][] getCellStatess() {
-        return cellStatess;
-    }
-
-    public void setCellStatess(CellState[][] cellStatess) {
-        this.cellStatess = cellStatess;
     }
 
     public User getDroppedUser() {

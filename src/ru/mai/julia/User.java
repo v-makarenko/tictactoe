@@ -13,16 +13,16 @@ import java.util.Objects;
 public class User implements Serializable {
     private String username;
     private CellState userSymbol;
+    // Правила, с которыми юзер хочет играть в данный момент
     private GameRules preferredGameRules;
 
     private int winCount;
     private int loseCount;
 
+    // Канал для приема сообщений от клиента, ассоциированного с этим юзером
     private transient ObjectInputStream inputStream;
+    // Канал для отправки сообщений клиенту, ассоциированного с этим юзером
     private transient ObjectOutputStream outputStream;
-
-    public User() {
-    }
 
     public User(String username) {
         this.username = username;
@@ -42,10 +42,12 @@ public class User implements Serializable {
         loseCount++;
     }
 
+    // Распечатать юзера в формате рейтинговой таблицы
     public void printRating() {
         System.out.printf("%15s %15s %15s\n", username, winCount, loseCount);
     }
 
+    // Распечатать юзера в формате предпочитаемых правил игры
     public void printGameParams() {
         if(getPreferredGameRules() != null) {
             System.out.printf("%15s %15s %15s %15s\n", username,

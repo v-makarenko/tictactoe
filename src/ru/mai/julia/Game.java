@@ -44,14 +44,11 @@ public class Game extends Thread {
     public void loop() throws IOException, ClassNotFoundException {
         try {
             while (true) {
-                waitingForUser = null;
+                waitingForUser = null; // тот, чей ход
                 for (int i = 0; i < players.size(); i++) {
                     GameStatus gameStatus = new GameStatus(field,
                             i == currentUserPlaying,
                             getUserByCellState(field.checkVictory(gameRules.getWinLineLength())));
-                    gameStatus.setCellState(CellState.X);
-                    gameStatus.setCellStates(new CellState[]{CellState.X, CellState.X, CellState.O});
-                    gameStatus.setCellStatess(new CellState[][]{new CellState[]{CellState.X, CellState.X, CellState.O}});
                     if (i == currentUserPlaying) {
                         waitingForUser = players.get(i);
                     }
