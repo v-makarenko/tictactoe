@@ -48,7 +48,8 @@ public class Game extends Thread {
                 for (int i = 0; i < players.size(); i++) {
                     GameStatus gameStatus = new GameStatus(field,
                             i == currentUserPlaying,
-                            getUserByCellState(field.checkVictory(gameRules.getWinLineLength())));
+                            getUserByCellState(field.checkVictory(gameRules.getWinLineLength())),
+                            field.isFilled());
                     if (i == currentUserPlaying) {
                         waitingForUser = players.get(i);
                     }
@@ -59,6 +60,10 @@ public class Game extends Thread {
                     System.out.println("Победили " + field.checkVictory(gameRules.getWinLineLength()));
                     final User winner = getUserByCellState(field.checkVictory(gameRules.getWinLineLength()));
                     endGame(winner);
+                    return;
+                }
+                if(field.isFilled()){
+                    endGame(null);
                     return;
                 }
 
@@ -73,7 +78,8 @@ public class Game extends Thread {
                 if(!player.equals(waitingForUser)){
                     GameStatus gameStatus = new GameStatus(field,
                             false,
-                            null);
+                            null,
+                            false);
                     gameStatus.setDroppedUser(waitingForUser);
                     player.getOutputStream().reset();
                     player.getOutputStream().writeObject(gameStatus);
@@ -92,25 +98,27 @@ public class Game extends Thread {
     }
 
     private void endGame(User winner) {
-        for (User player : players) {
-            if (ObjectLocator.getServer().getUsersEverPlayedList().contains(player)) {
-                User userFromList = ObjectLocator.getServer().getUsersEverPlayedList().get(ObjectLocator.getServer().getUsersEverPlayedList().indexOf(player));
-                if (winner.equals(userFromList)) {
-                    userFromList.win();
+        if(winner != null) {
+            for (User player : players) {
+                if (ObjectLocator.getServer().getUsersEverPlayedList().contains(player)) {
+                    User userFromList = ObjectLocator.getServer().getUsersEverPlayedList()
+                            .get(ObjectLocator.getServer().getUsersEverPlayedList().indexOf(player));
+                    if (winner.equals(userFromList)) {
+                        userFromList.win();
+                    } else {
+                        userFromList.lose();
+                    }
                 } else {
-                    userFromList.lose();
+                    if (winner.equals(player)) {
+                        player.win();
+                    } else {
+                        player.lose();
+                    }
+                    ObjectLocator.getServer().getUsersEverPlayedList().add(player);
                 }
-            } else {
-                if (winner.equals(player)) {
-                    player.win();
-                } else {
-                    player.lose();
-                }
-                ObjectLocator.getServer().getUsersEverPlayedList().add(player);
             }
         }
         ObjectLocator.getServer().endGame(this);
-
     }
 
     private User getUserByCellState(CellState checkVictory) {

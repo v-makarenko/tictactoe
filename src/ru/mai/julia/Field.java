@@ -40,6 +40,17 @@ public class Field implements Serializable {
         }
     }
 
+    public boolean isFilled(){
+        for(int i=0; i<width; i++){
+            for(int j=0; j<height; j++){
+                if(getCellState(i,j) == CellState.EMPTY){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public int getWidth() {
         return width;
     }

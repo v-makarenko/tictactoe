@@ -10,11 +10,13 @@ public class GameStatus implements Serializable {
     private boolean yourTurn;
     private User droppedUser;
     private User winner;
+    private boolean draw;
 
-    public GameStatus(Field field, boolean yourTurn, User winner) {
+    public GameStatus(Field field, boolean yourTurn, User winner, boolean draw) {
         this.field = field;
         this.yourTurn = yourTurn;
         this.winner = winner;
+        this.draw = draw;
     }
 
     public User getWinner() {
@@ -48,5 +50,9 @@ public class GameStatus implements Serializable {
 
     public void setDroppedUser(User droppedUser) {
         this.droppedUser = droppedUser;
+    }
+
+    public boolean isDraw() {
+        return draw;
     }
 }

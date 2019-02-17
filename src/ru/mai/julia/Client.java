@@ -130,6 +130,9 @@ public class Client {
                     System.out.println("Вы победили!");
                 }
                 return;
+            } else if(gameStatus.isDraw()){
+                System.out.println("Ничья!");
+                return;
             } else if(gameStatus.getDroppedUser()!=null){
                 System.out.println(gameStatus.getDroppedUser().getUsername() + " вышел из игры и проиграл. Вы возвращены в режим ожидания.");
                 return;
